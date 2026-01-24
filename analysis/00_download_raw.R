@@ -10,7 +10,8 @@ modules <- c(
   "DEMO_J", # demographics  
   "BMX_J",  # body measures
   "GHB_J",  # HbA1c
-  "GLU_J"   # fasting glucose
+  "GLU_J",  # fasting glucose
+  "DIQ_J"
 )
 base_url <- "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles"
 urls <- paste0(base_url, "/", modules, ".xpt")

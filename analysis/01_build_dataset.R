@@ -45,7 +45,11 @@ core <- demo_bmx |>
     SDMVSTRA,
     SDMVPSU,
     WTMEC2YR,
-    BMXBMI
+    BMXBMI,
+    # socio-demographics (from DEMO)
+    RIDRETH1,   # race/ethnicity
+    DMDEDUC2,   # education (>=20y)
+    INDFMPIR    # poverty-income ratio
   )
 n_core <- nrow(core)
 core <- core |> 
@@ -59,8 +63,17 @@ core <- core |>
     raw$GLU_J |> select(SEQN, LBXGLU, WTSAF2YR),
     by = "SEQN"
   )
+core <- core |>
+  left_join(raw$DIQ_J |> select(SEQN, DIQ010), by = "SEQN")
 stopifnot(nrow(core) == n_core)
 nhanes_adult <- core |> 
-  filter(RIDAGEYR >= 18)
+  filter(RIDAGEYR >= 18) |> 
+  mutate(
+    diabetes_a1c = ifelse(!is.na(LBXGH) & LBXGH >= 6.5, 1, 0),
+    diagnosed_dm = ifelse(DIQ010 == 1, 1, ifelse(DIQ010 %in% c(2,3), 0, NA)),
+    undiagnosed_dm = ifelse(diabetes_a1c == 1 & diagnosed_dm == 0, 1,
+                            ifelse(diabetes_a1c == 1 & diagnosed_dm == 1, 0, 0))
+  )
 dir_create(paths$clean)
+
 saveRDS(nhanes_adult, file = file.path(paths$clean, "nhanes_adult_core.rds"))

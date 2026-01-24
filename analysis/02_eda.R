@@ -36,6 +36,14 @@ c(
   glucose_available = n_glu
 )
 
+des_mec <- svydesign(
+  id      = ~SDMVPSU,
+  strata  = ~SDMVSTRA,
+  weights = ~WTMEC2YR,
+  nest    = TRUE,
+  data    = nhanes_adult
+)
+
 # End of EDA:
 # - analytic sample size established
 # - survey design objects created
