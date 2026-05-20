@@ -7,6 +7,7 @@ library(here)
 library(dplyr)
 library(survey)
 library(splines)
+
 # ---- Load data ----
 nhanes <- readRDS(here("data", "clean", "nhanes_adult_core.rds"))
 
@@ -138,7 +139,5 @@ or_socio2 <- cbind(
   OR = exp(coef(fit_udm_socio2)),
   exp(confint(fit_udm_socio2))
 )
-
-
 
 
